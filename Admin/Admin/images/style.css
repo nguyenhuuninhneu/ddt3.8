@@ -1,0 +1,32 @@
+/* ----------------------------------------------------------------------------------------------------------------*/
+/* ---------------------------->>>Code by dang0123<<<--------------------------------------------------------------*/
+/* ------------------Nguoi co y thuc vui long khong xoa dong nay---------------------------------------------------*/
+body{
+background: url("/tools/images/bg_wrapper.gif") repeat scroll 0% 0% transparent;margin: 200px;}
+#form1{
+left:20px;
+top:23px;
+position:absolute;
+background-color:#e8e8e8;
+border-right: 1px solid #ccc;
+border-bottom: 1px solid #ccc;
+border-top: 1px solid #666;
+border-left: 1px solid #666;
+width: 800px; background: url("/tools/images/bg5.jpg") no-repeat scroll 0% 0% transparent; margin-top: 100px; left: 100px; height: 400px;
+}
+#textBox1{margin-left: 30px;}
+#textBox2{margin: 10px 10px 10px 30px;}
+.khungset{margin-left: 50px;}
+.linhtinh{margin-left: 500px;
+margin-top: -200px;}
+.quantrong{margin-top: 200px;color: #fff;text-shadow: 0px 0px 6px rgb(255, 0, 100), 0px 0px 5px rgb(255, 0, 100), 0px 0px 5px rgb(255, 0, 100);}
+#Button1{margin-left: 200px;width: 100px;}
+#Button3{margin-top: -20px;width: 100px;}
+#Button4{margin-left: 200px;width: 100px;}
+#Button5{margin-top: -20px;width: 100px;}
+#Button6{margin-left: 200px;width: 100px;}
+#Button7{margin-top: -20px;width: 100px;}
+#Button8{margin-left: 200px;width: 100px;}
+#Label1{margin: 50px;color: red;}
+
+
