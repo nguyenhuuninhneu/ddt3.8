@@ -8867,6 +8867,7 @@ namespace Bussiness
                 sqlParameter[2] = new SqlParameter("@Place", item.Place);
                 sqlParameter[3] = new SqlParameter("@Level", item.Level);
                 sqlParameter[4] = new SqlParameter("@TotalGhost", item.TotalGhost);
+
                 this.db.RunProcedure("SP_Users_EquipGhost_Add", sqlParameter);
                 value = true;
                 item.IsDirty = false;
