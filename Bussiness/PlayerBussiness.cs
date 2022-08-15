@@ -8811,5 +8811,111 @@ namespace Bussiness
             }
             return result;
         }
+
+        public List<UserEquipGhostInfo> GetEquipGhost(int ID)
+        {
+            List<UserEquipGhostInfo> userEquipGhost = new List<UserEquipGhostInfo>();
+            SqlDataReader sqlDataReader = null;
+            try
+            {
+                try
+                {
+                    SqlParameter[] sqlParameter = new SqlParameter[] { new SqlParameter("@ID", SqlDbType.Int, 4) };
+                    sqlParameter[0].Value = ID;
+                    this.db.GetReader(ref sqlDataReader, "SP_GetUserEquipGhost", sqlParameter);
+                    while (sqlDataReader.Read())
+                    {
+                        UserEquipGhostInfo item = new UserEquipGhostInfo
+                        {
+                            UserID = (int)sqlDataReader["UserID"],
+                            BagType = (int)sqlDataReader["BagType"],
+                            Place = (int)sqlDataReader["Place"],
+                            Level = (int)sqlDataReader["Level"],
+                            TotalGhost = (int)sqlDataReader["TotalGhost"]
+                        };
+                        item.IsDirty = false;
+                        userEquipGhost.Add(item);
+                    }
+                }
+                catch (Exception exception1)
+                {
+                    Exception exception = exception1;
+                    if (BaseBussiness.log.IsErrorEnabled)
+                    {
+                        BaseBussiness.log.Error("SP_GetUserEquipGhost", exception);
+                    }
+                }
+            }
+            finally
+            {
+                if (sqlDataReader != null && !sqlDataReader.IsClosed)
+                {
+                    sqlDataReader.Close();
+                }
+            }
+            return userEquipGhost;
+        }
+
+        public bool AddUserEquipGhost(UserEquipGhostInfo item)
+        {
+            bool value = false;
+            try
+            {
+                SqlParameter[] sqlParameter = new SqlParameter[] { null, null, null, null, null };
+                sqlParameter[0] = new SqlParameter("@UserID", item.UserID);
+                sqlParameter[1] = new SqlParameter("@BagType", item.BagType);
+                sqlParameter[2] = new SqlParameter("@Place", item.Place);
+                sqlParameter[3] = new SqlParameter("@Level", item.Level);
+                sqlParameter[4] = new SqlParameter("@TotalGhost", item.TotalGhost);
+                this.db.RunProcedure("SP_Users_EquipGhost_Add", sqlParameter);
+                value = true;
+                item.IsDirty = false;
+            }
+            catch (Exception exception1)
+            {
+                Exception exception = exception1;
+                if (BaseBussiness.log.IsErrorEnabled)
+                {
+                    BaseBussiness.log.Error("SP_Users_EquipGhost_Add", exception);
+                }
+            }
+            return value;
+        }
+
+        public bool UpdateEquipGhostInfo(UserEquipGhostInfo item)
+        {
+            bool flag = false;
+
+            if (!item.IsDirty)
+            {
+                return flag;
+            }
+            
+            try
+            {
+                SqlParameter[] sqlParameter = new SqlParameter[]
+                {
+                    new SqlParameter("@UserID", item.UserID),
+                    new SqlParameter("@BagType", item.BagType),
+                    new SqlParameter("@Place", item.Place),
+                    new SqlParameter("@Level", item.Level),
+                    new SqlParameter("@TotalGhost", item.TotalGhost),
+                    new SqlParameter("@Result", SqlDbType.Int)
+                };
+                sqlParameter[5].Direction = ParameterDirection.ReturnValue;
+                this.db.RunProcedure("SP_UpdateEquipGhostInfo", sqlParameter);
+                flag = true;
+                item.IsDirty = false;
+            }
+            catch (Exception exception1)
+            {
+                Exception exception = exception1;
+                if (BaseBussiness.log.IsErrorEnabled)
+                {
+                    BaseBussiness.log.Error("SP_UpdateEquipGhostInfo", exception);
+                }
+            }
+            return flag;
+        }
     }
 }

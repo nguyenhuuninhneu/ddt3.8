@@ -112,7 +112,7 @@ namespace Game.Base.Packets
 
         GSPacketIn SendNetWork(int id, long delay);
 
-        GSPacketIn SendUserEquip(PlayerInfo player, List<ItemInfo> items, List<UserGemStone> UserGemStone);
+        GSPacketIn SendUserEquip(PlayerInfo player, List<ItemInfo> items, List<UserGemStone> UserGemStone, List<UserEquipGhostInfo> equipGhost);
 
         GSPacketIn SendMessage(eMessageType type, string message);
 
@@ -254,6 +254,8 @@ namespace Game.Base.Packets
         GSPacketIn SendUpdateUpCount(PlayerInfo player);
 
         GSPacketIn SendNecklaceStrength(PlayerInfo player);
+
+        GSPacketIn SendSyncEquipGhost(PlayerInfo player, List<UserEquipGhostInfo> equipGhost);
 
         #region WorldBoss
         void SendOpenWorldBoss(int pX, int pY);

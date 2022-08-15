@@ -55,6 +55,10 @@ namespace Tank.Request
                 //26-01-2022
                 build.Append(activitysystemitems.Build(context));
                 build.Append(suittemplateinfolist.Build(context));
+
+                // 08-11-2022
+                build.Append(SpiritInfoList.Bulid(context));
+
                 context.Response.ContentType = "text/plain";
                 context.Response.Write(build.ToString());
 

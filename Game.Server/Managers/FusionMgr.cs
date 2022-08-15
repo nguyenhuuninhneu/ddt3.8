@@ -237,6 +237,103 @@ public class FusionMgr
         return null;
     }
 
+    public static ItemTemplateInfo FusionV2(List<ItemInfo> Items, List<ItemInfo> AppendItems, ref bool isBind, ref bool result, Dictionary<int, double> ItemRate)
+    {
+        List<int> list = new List<int>();
+        int MaxLevel = 0;
+        int TotalRate = 0;
+        int TotalNeedRate = 0;
+        if (Items == null)
+        {
+            return null;
+        }
+        ItemTemplateInfo rewardItem = null;
+        foreach (ItemInfo Item in Items)
+        {
+            if (Item != null)
+            {
+                list.Add(Item.Template.FusionType);
+                if (Item.Template.Level > MaxLevel)
+                {
+                    MaxLevel = Item.Template.Level;
+                }
+                TotalRate += Item.Template.FusionRate;
+                TotalNeedRate += Item.Template.FusionNeedRate;
+                if (Item.IsBinds)
+                {
+                    isBind = true;
+                }
+            }
+        }
+        foreach (ItemInfo AppendItem in AppendItems)
+        {
+            TotalRate += AppendItem.Template.FusionRate / 2;
+            TotalNeedRate += AppendItem.Template.FusionNeedRate / 2;
+            if (AppendItem.IsBinds)
+            {
+                isBind = true;
+            }
+        }
+        list.Sort();
+        StringBuilder stringBuilder = new StringBuilder();
+        foreach (int item in list)
+        {
+            stringBuilder.Append(item);
+        }
+        string key = stringBuilder.ToString();
+        m_lock.AcquireReaderLock(-1);
+        try
+        {
+            if (_fusions.ContainsKey(key))
+            {
+                FusionInfo fusionInfo = _fusions[key];
+                rewardItem = ItemMgr.GetGoodsbyFusionTypeandLevel(fusionInfo.Reward, MaxLevel + 1);
+                if(rewardItem == null)
+                {
+                    rewardItem = ItemMgr.GetGoodsbyFusionTypeandLevel(fusionInfo.Reward, MaxLevel + 2);
+                    if (rewardItem == null)
+                    {
+                        rewardItem = ItemMgr.GetGoodsbyFusionTypeandLevel(fusionInfo.Reward, MaxLevel);
+                    }
+                }
+                
+                if(rewardItem == null)
+                {
+                    return null;
+                }
+
+                foreach (ItemInfo Item2 in Items)
+                {
+                    if (Item2.Template.TemplateID == rewardItem.TemplateID)
+                    {
+                        return null;
+                    }
+                }
+
+                if(rewardItem.FusionNeedRate > TotalNeedRate)
+                {
+                    TotalNeedRate = rewardItem.FusionNeedRate;
+                }
+                ItemRate.Add(rewardItem.TemplateID, (double)(100 * TotalRate) / (double)TotalNeedRate);
+
+                if (rand.Next(TotalNeedRate) < TotalRate)
+                {
+                    result = true;
+                }
+                
+                return rewardItem;
+            }
+        }
+        catch
+        {
+        }
+        finally
+        {
+            m_lock.ReleaseReaderLock();
+        }
+        return null;
+    }
+
     public static Dictionary<int, double> FusionPreview(List<ItemInfo> Items, List<ItemInfo> AppendItems, ref bool isBind)
     {
         List<int> list = new List<int>();

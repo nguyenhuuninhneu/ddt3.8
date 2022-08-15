@@ -10,6 +10,12 @@ using System.Collections.Generic;
 
 namespace Game.Server.GameUtils
 {
+    public enum eEquipInventoryPlace
+    {
+        MAIN_WEAPON = 6,
+        HAT = 0,
+        CLOTHES = 4,
+    }
     public class PlayerEquipInventory : PlayerInventory
     {
         public static readonly ILog log = LogManager.GetLogger("ItemLogger");
@@ -249,10 +255,14 @@ namespace Game.Server.GameUtils
                         {
                             continue;
                         }
-                        attack += item.Attack;
-                        defence += item.Defence;
-                        agility += item.Agility;
-                        lucky += item.Luck;
+
+                        UserEquipGhostInfo equiqGhost = this.Player.GetEquipGhostByItem(item);
+                        SpiritInfo spiritInfo = SpiritMgr.GetSpiritInfo(equiqGhost);
+
+                        attack += item.Attack + item.getAdditionPropertyByGhostData(eItemPropertyType.ATTACK, equiqGhost, spiritInfo);
+                        defence += item.Defence + item.getAdditionPropertyByGhostData(eItemPropertyType.DEFENSE, equiqGhost, spiritInfo);
+                        agility += item.Agility + item.getAdditionPropertyByGhostData(eItemPropertyType.AGILITY, equiqGhost, spiritInfo);
+                        lucky += item.Luck + item.getAdditionPropertyByGhostData(eItemPropertyType.LUCK, equiqGhost, spiritInfo);
                         strengthenLevel = strengthenLevel > item.StrengthenLevel ? strengthenLevel : item.StrengthenLevel;
                         AddBaseLatentProperty(item, ref attack, ref defence, ref agility, ref lucky);
                         AddBaseGemstoneProperty(item, ref gematt, ref gemdef, ref gemagi, ref gemluck, ref gemhp);
@@ -878,11 +888,24 @@ namespace Game.Server.GameUtils
                 {
                     if (itemAt.Template.CategoryID == 1 || itemAt.Template.CategoryID == 5)
                     {
-                        num = 5;
+                        num = num > 5 ? num : 5;
                     }
                     if (itemAt.Template.CategoryID == 7 || itemAt.Template.CategoryID == 27)
                     {
-                        num2 = 5;
+                        num2 = num2 > 5 ? num2 : 5;
+                    }
+                }
+                
+                UserEquipGhostInfo equipGhost = m_player.GetEquipGhostByItem(itemAt);
+                if (equipGhost != null && equipGhost.Level >= 10)
+                {
+                    if (itemAt.Template.CategoryID == 1 || itemAt.Template.CategoryID == 5)
+                    {
+                        num = num > 6 ? num : 6;
+                    }
+                    if (itemAt.Template.CategoryID == 7 || itemAt.Template.CategoryID == 27)
+                    {
+                        num2 = num2 > 6 ? num2 : 6;
                     }
                 }
             }

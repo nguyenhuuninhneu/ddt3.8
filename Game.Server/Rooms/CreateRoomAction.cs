@@ -40,15 +40,16 @@ namespace Game.Server.Rooms
 			}
 			BaseRoom[] rooms = RoomMgr.Rooms;
 			BaseRoom baseRoom = null;
-			int num = rand.Next(rooms.Length);
+			// fix: randomly has a large probability to cannot found room when the number of using room is large 
+			//int num = rand.Next(rooms.Length);
 			for (int i = 0; i < rooms.Length; i++)
 			{
-				if (!rooms[num].IsUsing)
+				if (!rooms[i].IsUsing)
 				{
-					baseRoom = rooms[num];
+					baseRoom = rooms[i];
 					break;
 				}
-				num = rand.Next(rooms.Length);
+				//num = rand.Next(rooms.Length);
 			}
 			if (baseRoom != null)
 			{

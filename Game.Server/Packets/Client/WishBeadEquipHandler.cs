@@ -74,7 +74,7 @@ namespace Game.Server.Packets.Client
                 if (probability > random.Next(1000))
                 {
                     item.goldBeginTime = DateTime.Now;
-                    item.goldValidDate = 3;
+                    item.goldValidDate = 30;
                     if (item.Template.CategoryID == 7)
                     {
                         ItemTemplateInfo itemTemplateInfo = ItemMgr.FindItemTemplate(goldEquip.NewTemplateId);

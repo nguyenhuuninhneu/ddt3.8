@@ -347,6 +347,9 @@
     <Compile Include="IMRecentContactsList.ashx.cs">
       <DependentUpon>IMRecentContactsList.ashx</DependentUpon>
     </Compile>
+    <Compile Include="SpiritInfoList.ashx.cs">
+      <DependentUpon>SpiritInfoList.ashx</DependentUpon>
+    </Compile>
     <Compile Include="ItemStrengthenList.ashx.cs">
       <DependentUpon>ItemStrengthenList.ashx</DependentUpon>
     </Compile>
@@ -727,6 +730,7 @@
     <Content Include="luckstaractivityrank.ashx" />
     <Content Include="loadpetmoeproperty.ashx" />
     <Content Include="loadpetfightproperty.ashx" />
+    <Content Include="SpiritInfoList.ashx" />
     <None Include="packages.config" />
     <Content Include="totemhonortemplate.ashx" />
     <None Include="Web.config" />

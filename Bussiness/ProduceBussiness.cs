@@ -4161,5 +4161,49 @@ namespace Bussiness
 			}
 			return infos.ToArray();
 		}
+
+		public SpiritInfo[] GetAllSpiritInfo()
+		{
+			List<SpiritInfo> list = new List<SpiritInfo>();
+			SqlDataReader resultDataReader = null;
+			try
+			{
+				db.GetReader(ref resultDataReader, "SP_Spirit_Info_All");
+				while (resultDataReader.Read())
+				{
+					SpiritInfo item = new SpiritInfo
+					{
+						Level = (int)resultDataReader["Level"],
+						MustGetTimes = (int)resultDataReader["MustGetTimes"],
+						BaseSuccessPro = (int)resultDataReader["BaseSuccessPro"],
+						RefrenceValue = (int)resultDataReader["RefrenceValue"],
+						SkillId = (int)resultDataReader["SkillId"],
+						AttackAdd = (int)resultDataReader["AttackAdd"],
+						LuckAdd = (int)resultDataReader["LuckAdd"],
+						DefendAdd = (int)resultDataReader["DefendAdd"],
+						AgilityAdd = (int)resultDataReader["AgilityAdd"],
+						BagType = (int)resultDataReader["BagType"],
+						BagPlace = (int)resultDataReader["BagPlace"],
+						CategoryId = (int)resultDataReader["CategoryId"],
+					};
+					list.Add(item);
+				}
+			}
+			catch (Exception exception)
+			{
+				if (log.IsErrorEnabled)
+				{
+					log.Error("GetAllSpiritInfo", exception);
+				}
+			}
+			finally
+			{
+				if (resultDataReader != null && !resultDataReader.IsClosed)
+				{
+					resultDataReader.Close();
+				}
+			}
+			return list.ToArray();
+		}
 	}
 }

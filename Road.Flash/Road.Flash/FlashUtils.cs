@@ -549,10 +549,29 @@ namespace Road.Flash
         public static XElement CreateStrengThenExpItems(StrengThenExpInfo info)
         {
             return new XElement("Item",
-            new XAttribute("Level", info.Level),
-            new XAttribute("Exp", info.Exp),
-            new XAttribute("NecklaceStrengthExp", info.NecklaceStrengthExp),
-            new XAttribute("NecklaceStrengthPlus", info.NecklaceStrengthPlus));
+                new XAttribute("Level", info.Level),
+                new XAttribute("Exp", info.Exp),
+                new XAttribute("NecklaceStrengthExp", info.NecklaceStrengthExp),
+                new XAttribute("NecklaceStrengthPlus", info.NecklaceStrengthPlus)
+            );
+        }
+
+        public static XElement CreateSpiritInfo(SpiritInfo info)
+        {
+            return new XElement("Item",
+                new XAttribute("Level", info.Level),
+                new XAttribute("MustGetTimes", info.MustGetTimes),
+                new XAttribute("BaseSuccessPro", info.BaseSuccessPro),
+                new XAttribute("RefrenceValue", info.RefrenceValue),
+                new XAttribute("SkillId", info.SkillId),
+                new XAttribute("AttackAdd", info.AttackAdd),
+                new XAttribute("LuckAdd", info.LuckAdd),
+                new XAttribute("DefendAdd", info.DefendAdd),
+                new XAttribute("AgilityAdd", info.AgilityAdd),
+                new XAttribute("BagType", info.BagType),
+                new XAttribute("BagPlace", info.BagPlace),
+                new XAttribute("CategoryId", info.CategoryId)
+            );
         }
     }
 }

@@ -46,11 +46,11 @@ namespace Game.Server.Packets.Client
             }
             if (toBagType == eBageType.Store)
             {
-                if (!client.Player.isPassCheckCode())
-                {
-                    client.Player.ShowCheckCode();
-                    return 0;
-                }
+                //if (!client.Player.isPassCheckCode())
+                //{
+                //    client.Player.ShowCheckCode();
+                //    return 0;
+                //}
                 client.Player.CountFunction2++;
             }
             bag.BeginChanges();

@@ -18,6 +18,7 @@ namespace Game.Server.Packets.Client
             PlayerInfo playerInfo = null;
             List<ItemInfo> list = null;
             List<UserGemStone> GemStone = null;
+            List<UserEquipGhostInfo> EquipGhost = null;
             GamePlayer gamePlayer;
             if (!flag)
             {
@@ -34,6 +35,7 @@ namespace Game.Server.Packets.Client
                 playerInfo = gamePlayer.PlayerCharacter;
                 list = gamePlayer.EquipBag.GetItems(0, 31);
                 GemStone = gamePlayer.GemStone;
+                EquipGhost = gamePlayer.EquipGhost;
             }
             else
             {
@@ -45,17 +47,14 @@ namespace Game.Server.Packets.Client
                         playerInfo.Texp = playerBussiness.GetUserTexpInfoSingle(playerInfo.ID);
                         list = playerBussiness.GetUserEuqip(playerInfo.ID);
                         GemStone = playerBussiness.GetSingleGemStones(num);
+                        EquipGhost = playerBussiness.GetEquipGhost(num);
                     }
                 }
             }
-            if (playerInfo != null && list != null && playerInfo.Texp != null && GemStone != null || playerInfo.UserName == "khanhlam")
+            if (playerInfo != null && list != null && playerInfo.Texp != null && GemStone != null)
             {
-                client.Out.SendUserEquip(playerInfo, list, GemStone);
+                client.Out.SendUserEquip(playerInfo, list, GemStone, EquipGhost);
             }
-            //else if (playerInfo.UserName == "khanhlam")
-            //{
-            //    client.Out.SendAcademySystemNotice("Không đủ quyền hạn để xem thông tin tài khoản trên!", isAlert: false);
-            //}
             else
             {
                 client.Out.SendMessage(eMessageType.ChatERROR, "Thông tin người chơi không có thực!");

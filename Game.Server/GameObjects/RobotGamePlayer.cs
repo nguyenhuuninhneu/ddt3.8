@@ -266,7 +266,7 @@ namespace Game.Server.GameObjects
                 return null;
             }
 
-            public GSPacketIn SendUserEquip(PlayerInfo player, List<ItemInfo> items, List<UserGemStone> UserGemStone)
+            public GSPacketIn SendUserEquip(PlayerInfo player, List<ItemInfo> items, List<UserGemStone> UserGemStone, List<UserEquipGhostInfo> equipGhost)
             {
                 return null;
             }
@@ -633,6 +633,11 @@ namespace Game.Server.GameObjects
             public void SendOpenWorldBoss(int pX, int pY)
             {
                 //throw new NotImplementedException();
+            }
+
+            public GSPacketIn SendSyncEquipGhost(PlayerInfo player, List<UserEquipGhostInfo> equipGhost)
+            {
+                throw new NotImplementedException();
             }
         }
 

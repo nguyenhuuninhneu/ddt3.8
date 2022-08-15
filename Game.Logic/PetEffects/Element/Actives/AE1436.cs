@@ -1,6 +1,7 @@
 ﻿using Game.Base.Packets;
 using Game.Logic.PetEffects.ContinueElement;
 using Game.Logic.Phy.Object;
+using SqlDataProvider.Data;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -160,7 +161,9 @@ namespace Game.Logic.PetEffects.Element.Actives
 
             if (p.AddArmor && (p as Player).DeputyWeapon != null)
             {
-                int addPoint = (p as Player).DeputyWeapon.Template.Property7 + (int)Math.Pow(1.1, (double)(p as Player).DeputyWeapon.StrengthenLevel);
+                // TODO: check the correctness of this line of code
+                //int addPoint = (p as Player).DeputyWeapon.Template.Property7 + (int)Math.Pow(1.1, (double)(p as Player).DeputyWeapon.StrengthenLevel);
+                int addPoint = (p as Player).DeputyWeapon.getTotalValueOfProperty(eItemPropertyType.ARMOR);
                 baseGuard += addPoint;
                 defence += addPoint;
             }

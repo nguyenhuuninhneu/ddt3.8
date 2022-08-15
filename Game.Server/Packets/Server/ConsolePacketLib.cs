@@ -263,9 +263,9 @@ namespace Game.Server.Packets.Server
 			throw new NotImplementedException();
         }
 
-        public GSPacketIn SendUserEquip(PlayerInfo player, List<ItemInfo> items, List<UserGemStone> UserGemStone)
+        public GSPacketIn SendUserEquip(PlayerInfo player, List<ItemInfo> items, List<UserGemStone> UserGemStone, List<UserEquipGhostInfo> equipGhost)
         {
-			throw new NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public void SendWaitingRoom(bool result)
@@ -629,6 +629,11 @@ namespace Game.Server.Packets.Server
         }
 
         public GSPacketIn SendNecklaceStrength(PlayerInfo player)
+        {
+            throw new NotImplementedException();
+        }
+
+        public GSPacketIn SendSyncEquipGhost(PlayerInfo player, List<UserEquipGhostInfo> equipGhost)
         {
             throw new NotImplementedException();
         }

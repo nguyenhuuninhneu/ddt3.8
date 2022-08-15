@@ -2815,7 +2815,8 @@ namespace Game.Logic.Phy.Object
                 {
                     isArrmor = true;
                 }
-                new AddGuardEquipEffect((int)getHertAddition(m_DeputyWeapon), 1, isArrmor).Start(this);
+                //new AddGuardEquipEffect((int)getHertAddition(m_DeputyWeapon), 1, isArrmor).Start(this);
+                new AddGuardEquipEffect(m_DeputyWeapon.getTotalValueOfProperty(eItemPropertyType.ARMOR), 1, isArrmor).Start(this);
                 OnPlayerGuard();
             }
             else

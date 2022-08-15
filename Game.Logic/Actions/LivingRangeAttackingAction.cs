@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using SqlDataProvider.Data;
 using Game.Base.Packets;
 using Game.Logic.Phy.Object;
 
@@ -117,8 +118,10 @@ namespace Game.Logic.Actions
             var attack = this.living.Attack;
             if (currentLiving.AddArmor && (currentLiving as Player)?.DeputyWeapon != null)
             {
-                var property7 = ((Player)currentLiving).DeputyWeapon.Template.Property7 +
-                                (int)Math.Pow(1.1, ((Player)currentLiving).DeputyWeapon.StrengthenLevel);
+                // TODO: Check the correctness of this line of code
+                //var property7 = ((Player)currentLiving).DeputyWeapon.Template.Property7 +
+                //                (int)Math.Pow(1.1, ((Player)currentLiving).DeputyWeapon.StrengthenLevel);
+                var property7 = ((Player)currentLiving).DeputyWeapon.getTotalValueOfProperty(eItemPropertyType.ARMOR);
                 baseGuard += property7;
                 defence += property7;
             }

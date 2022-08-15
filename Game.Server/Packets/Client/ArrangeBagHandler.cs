@@ -53,7 +53,10 @@ namespace Game.Server.Packets.Client
 									if (!list.Contains(num2) && items[j].TemplateID == items[num2].TemplateID && items[j].CanStackedTo(items[num2]))
 									{
 										inventory.MoveItem(items[num2].Place, items[j].Place, items[num2].Count);
-										list.Add(num2);
+										if(inventory.GetItemAt(items[num2].Place) == null)
+                                        {
+											list.Add(num2);
+										}					
 									}
 								}
 							}

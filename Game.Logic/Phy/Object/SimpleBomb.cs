@@ -219,7 +219,8 @@ namespace Game.Logic.Phy.Object
 								}
 								else
 								{
-									num2 = (int)((double)((Player)m_owner).PlayerDetail.SecondWeapon.Template.Property7 * Math.Pow(1.1, ((Player)m_owner).PlayerDetail.SecondWeapon.StrengthenLevel) * num);
+									//num2 = (int)((double)((Player)m_owner).PlayerDetail.SecondWeapon.Template.Property7 * Math.Pow(1.1, ((Player)m_owner).PlayerDetail.SecondWeapon.StrengthenLevel) * num);
+									num2 = (int)(((Player)m_owner).PlayerDetail.SecondWeapon.getTotalValueOfProperty(eItemPropertyType.RECOVER_HP) * num);
 									num2 += m_owner.FightBuffers.ConsortionAddBloodGunCount;
 									num2 += m_owner.PetEffects.IncreaseAngelicPoint;
 									if (item3 is Player)
@@ -447,7 +448,8 @@ namespace Game.Logic.Phy.Object
 			double attack = m_owner.Attack;
 			if (target.AddArmor && (target as Player).DeputyWeapon != null)
 			{
-				int addPoint = (int)target.getHertAddition((target as Player).DeputyWeapon);
+				//int addPoint = (int)target.getHertAddition((target as Player).DeputyWeapon);
+				int addPoint = (target as Player).DeputyWeapon.getTotalValueOfProperty(eItemPropertyType.ARMOR);
 				baseGuard += (double)addPoint;
 				defend += (double)addPoint;
 			}
@@ -487,7 +489,8 @@ namespace Game.Logic.Phy.Object
 			double attack = m_owner.Attack;
 			if (target.AddArmor && (target as Player).DeputyWeapon != null)
 			{
-				int addPoint = (int)target.getHertAddition((target as Player).DeputyWeapon);
+				//int addPoint = (int)target.getHertAddition((target as Player).DeputyWeapon);
+				int addPoint = (target as Player).DeputyWeapon.getTotalValueOfProperty(eItemPropertyType.ARMOR);
 				baseGuard += (double)addPoint;
 				defence += (double)addPoint;
 			}

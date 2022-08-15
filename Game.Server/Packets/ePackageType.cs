@@ -252,5 +252,7 @@ namespace Game.Server.Packets
         TOTEM = 136,
         NECKLACE_STRENGTH = 95,
         HONOR_UP_COUNT = 96,
+        EQUIP_GHOST = 391,
+        SYNC_EQUIP_GHOST = 392,
     }
 }

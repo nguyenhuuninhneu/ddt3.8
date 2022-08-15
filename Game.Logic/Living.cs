@@ -1108,7 +1108,8 @@ public class Living : Physics
         double attack = Attack;
         if (target.AddArmor && (target as Player).DeputyWeapon != null)
         {
-            int num3 = (int)getHertAddition((target as Player).DeputyWeapon);
+            //int num3 = (int)getHertAddition((target as Player).DeputyWeapon);
+            int num3 = (target as Player).DeputyWeapon.getTotalValueOfProperty(eItemPropertyType.ARMOR);
             num += (double)num3;
             num2 += (double)num3;
         }
@@ -1138,7 +1139,8 @@ public class Living : Physics
         double attack = Attack;
         if (target.AddArmor && (target as Player).DeputyWeapon != null)
         {
-            int num3 = (int)getHertAddition((target as Player).DeputyWeapon);
+            //int num3 = (int)getHertAddition((target as Player).DeputyWeapon);
+            int num3 = (target as Player).DeputyWeapon.getTotalValueOfProperty(eItemPropertyType.ARMOR);
             num += (double)num3;
             num2 += (double)num3;
         }

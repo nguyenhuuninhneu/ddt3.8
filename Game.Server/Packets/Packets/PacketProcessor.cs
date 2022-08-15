@@ -100,7 +100,7 @@ namespace Game.Base.Packets
 			m_activePacketHandler = null;
 			if (log.IsDebugEnabled)
 			{
-				log.Debug("Package process Time:" + num2 + "ms!");
+				log.Debug("Package " + packetHandler + " process Time:" + num2 + "ms!");
 			}
 			if (num2 > 1500)
 			{

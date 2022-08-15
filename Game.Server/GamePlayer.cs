@@ -353,6 +353,8 @@ public class GamePlayer : IGamePlayer
 
     private List<UserGemStone> m_GemStone;
 
+    private List<UserEquipGhostInfo> m_equipGhost;
+
     private static char[] permissionChars = new char[4]
     {
         '1',
@@ -751,6 +753,18 @@ public class GamePlayer : IGamePlayer
         set
         {
             this.m_GemStone = value;
+        }
+    }
+
+    public List<UserEquipGhostInfo> EquipGhost
+    {
+        get
+        {
+            return this.m_equipGhost;
+        }
+        set
+        {
+            this.m_equipGhost = value;
         }
     }
 
@@ -1192,6 +1206,7 @@ public class GamePlayer : IGamePlayer
         this.count_function2 = 0;
         this.count_random = new Random();
         this.m_GemStone = new List<UserGemStone>();
+        this.m_equipGhost = new List<UserEquipGhostInfo>();
         this.m_avatarcollect = new PlayerAvatarCollection(this, true);
     }
 
@@ -2431,10 +2446,18 @@ public class GamePlayer : IGamePlayer
         ItemInfo itemAt = m_equipBag.GetItemAt(6);
         if (itemAt != null)
         {
-            double num3 = itemAt.Template.Property7;
-            int num4 = (itemAt.isGold ? 1 : 0);
-            double para = itemAt.StrengthenLevel + num4;
-            baseattack += (int)(getHertAddition(num3, para) + num3);
+            //double num3 = itemAt.Template.Property7;
+            //int num4 = (itemAt.isGold ? 1 : 0);
+            //double para = itemAt.StrengthenLevel + num4;
+            //baseattack += (int)(getHertAddition(num3, para) + num3);
+            baseattack += itemAt.Template.Property7;
+            baseattack += itemAt.getAdditionPropertyByStrengthen(eItemPropertyType.HERT);
+
+            UserEquipGhostInfo equiqGhost = this.GetEquipGhostByCategory(itemAt.Template.CategoryID);
+            SpiritInfo spiritInfo = SpiritMgr.GetSpiritInfo(equiqGhost);
+
+            baseattack += itemAt.getAdditionPropertyByGhostData(eItemPropertyType.HERT, equiqGhost, spiritInfo);
+
             if (itemAt.Hole1 > 0)
             {
                 BaseAttack(itemAt.Hole1, ref baseattack);
@@ -2585,18 +2608,34 @@ public class GamePlayer : IGamePlayer
         ItemInfo itemAt3 = m_equipBag.GetItemAt(4);
         if (itemAt2 != null)
         {
-            double num2 = itemAt2.Template.Property7;
-            int num3 = (itemAt2.isGold ? 1 : 0);
-            double para = itemAt2.StrengthenLevel + num3;
-            defence += (int)(getHertAddition(num2, para) + num2);
+            //double num2 = itemAt2.Template.Property7;
+            //int num3 = (itemAt2.isGold ? 1 : 0);
+            //double para = itemAt2.StrengthenLevel + num3;
+            //defence += (int)(getHertAddition(num2, para) + num2);
+            defence += itemAt2.Template.Property7;
+            defence += itemAt2.getAdditionPropertyByStrengthen(eItemPropertyType.ARMOR);
+
+            UserEquipGhostInfo equiqGhost = this.GetEquipGhostByCategory(itemAt2.Template.CategoryID);
+            SpiritInfo spiritInfo = SpiritMgr.GetSpiritInfo(equiqGhost);
+
+            defence += itemAt2.getAdditionPropertyByGhostData(eItemPropertyType.ARMOR, equiqGhost, spiritInfo);
+
             AddProperty(itemAt2, ref defence);
         }
         if (itemAt3 != null)
         {
-            double num4 = itemAt3.Template.Property7;
-            int num5 = (itemAt3.isGold ? 1 : 0);
-            double para2 = itemAt3.StrengthenLevel + num5;
-            defence += (int)(getHertAddition(num4, para2) + num4);
+            //double num4 = itemAt3.Template.Property7;
+            //int num5 = (itemAt3.isGold ? 1 : 0);
+            //double para2 = itemAt3.StrengthenLevel + num5;
+            //defence += (int)(getHertAddition(num4, para2) + num4);
+            defence += itemAt3.Template.Property7;
+            defence += itemAt3.getAdditionPropertyByStrengthen(eItemPropertyType.ARMOR);
+
+            UserEquipGhostInfo equiqGhost = this.GetEquipGhostByCategory(itemAt3.Template.CategoryID);
+            SpiritInfo spiritInfo = SpiritMgr.GetSpiritInfo(equiqGhost);
+
+            defence += itemAt3.getAdditionPropertyByGhostData(eItemPropertyType.ARMOR, equiqGhost, spiritInfo);
+
             AddProperty(itemAt3, ref defence);
         }
         if (itemAt != null)
@@ -2932,6 +2971,7 @@ public class GamePlayer : IGamePlayer
             {
                 m_character.Texp.texpCount = 0;
             }
+            this.LoadEquipGhost(playerBussiness);
             int[] updatedSlots = new int[3]
             {
                 0,
@@ -3331,6 +3371,7 @@ public class GamePlayer : IGamePlayer
                         this.UpdateHonor(this.m_character.honorId);
                     Farm.LoadFarmLand();
                     Out.SendOpenVIP(this);
+                    Out.SendSyncEquipGhost(this.m_character, this.m_equipGhost);
                     EquipBag.UpdatePlayerProperties();
                     PetBag.UpdateEatPets();
                     SetupProcessor();
@@ -4406,6 +4447,9 @@ public class GamePlayer : IGamePlayer
                         pb.UpdateLabyrinthInfo(this.userLabyrinthInfo);
                     foreach (UserGemStone g in this.m_GemStone)
                         pb.UpdateGemStoneInfo(g);
+
+                    foreach (var i in this.m_equipGhost)
+                        pb.UpdateEquipGhostInfo(i);
                 }
             }
             EquipBag.SaveToDatabase();
@@ -5169,9 +5213,11 @@ public class GamePlayer : IGamePlayer
         num += PlayerCharacter.Luck;
         double baseAttack = GetBaseAttack();
         double baseDefence = GetBaseDefence();
+        // fightPower = (attack + defense + agility + luck + 1000) * (hert ^ 3 + 3.5 * armor ^ 3) / 10^8 + 0.95 * hp (luc chien)
         FightPower += (int)((double)(num + 1000) * (baseAttack * baseAttack * baseAttack + 3.5 * baseDefence * baseDefence * baseDefence) / 100000000.0 + (double)hp * 0.95);
         if (m_currentSecondWeapon != null)
         {
+            // TODO: check the logic of this line
             FightPower += (int)((double)m_currentSecondWeapon.Template.Property7 * Math.Pow(1.1, m_currentSecondWeapon.StrengthenLevel));
         }
         if (FightPower < 0)
@@ -5938,6 +5984,73 @@ public class GamePlayer : IGamePlayer
                     break;
                 }
             }
+        }
+    }
+
+    public void LoadEquipGhost(PlayerBussiness db)
+    {
+        lock (this.m_equipGhost)
+        {
+            this.m_equipGhost = db.GetEquipGhost(this.m_character.ID);
+            if (m_equipGhost.Count == 0)
+            {
+                // init for new user if empty
+                List<int> _places = new List<int>()
+                {
+                    0, // hat
+                    4, // clothes
+                    6, // main weapon
+                };
+
+                foreach (var place in _places)
+                {
+                    UserEquipGhostInfo info = new UserEquipGhostInfo
+                    {
+                        UserID = this.m_character.ID,
+                        BagType = 0,
+                        Place = place,
+                        Level = 0,
+                        TotalGhost = 0
+                    };
+                    m_equipGhost.Add(info);
+                    db.AddUserEquipGhost(info);
+                }
+            }
+
+            //foreach (var info in infos)
+            //{
+            //    this.m_equipGhost.Add(info.CategoryID, info);
+            //}
+        }
+    }
+
+    public UserEquipGhostInfo GetEquipGhostByCategory(int categoryID)
+    {
+        return this.m_equipGhost.FirstOrDefault<UserEquipGhostInfo>((Func<UserEquipGhostInfo, bool>)(e => categoryID == e.CategoryID));
+    }
+
+    public UserEquipGhostInfo GetEquipGhostByItem(ItemInfo item)
+    {
+        if(item == null)
+        {
+            return null;
+        }
+        return this.m_equipGhost.FirstOrDefault<UserEquipGhostInfo>((Func<UserEquipGhostInfo, bool>)(e => item.Place == e.Place && item.BagType == e.BagType));
+    }
+
+    public void UpdateEquipGhost(UserEquipGhostInfo e)
+    {
+        lock (this.m_equipGhost)
+        {
+            for (int index = 0; index < this.m_equipGhost.Count; ++index)
+            {
+                if (this.m_equipGhost[index].Place == e.Place && this.m_equipGhost[index].BagType == e.BagType)
+                {
+                    this.m_equipGhost[index] = e;
+                    break;
+                }
+            }
+            Out.SendSyncEquipGhost(this.m_character, this.m_equipGhost);
         }
     }
 

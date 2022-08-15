@@ -527,7 +527,7 @@ namespace Game.Server
                 {
                     int startTime = GameProperties.LittleGameStartHourse;
                     int stopTime = GameProperties.LittleGameStartHourse + GameProperties.LittleGameTimeSpending;
-                    if (DateTime.Now.Hour == startTime && !LittleGameWorldMgr.IsOpen)
+                    if (DateTime.Now.Hour >= startTime && DateTime.Now.Hour < stopTime && !LittleGameWorldMgr.IsOpen)
                     {
                         LittleGameWorldMgr.OpenLittleGameSetup();
                     }
@@ -1085,6 +1085,10 @@ namespace Game.Server
                 {
                     return false;
                 }
+                if (!InitComponent(SpiritMgr.Init(), "SpiritMgr Init"))
+                {
+                    return false;
+                }
                 if (!InitComponent(PropItemMgr.Init(), "PropItemMgr Init"))
                 {
                     return false;
@@ -1263,7 +1267,6 @@ namespace Game.Server
                     log.Info("GameServer is now open for connections!");
                 }
                 m_isRunning = true;
-                WorldBossScan(true);
                 return true;
             }
             catch (Exception exception)

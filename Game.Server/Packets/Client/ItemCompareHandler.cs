@@ -1,6 +1,7 @@
 using Bussiness;
 using Game.Base.Packets;
 using SqlDataProvider.Data;
+using System;
 
 namespace Game.Server.Packets.Client
 {
@@ -13,7 +14,8 @@ namespace Game.Server.Packets.Client
 			{
 				return 0;
 			}
-			int itemID = packet.ReadInt();
+			string itemIDStr = packet.ReadString();
+			int itemID = Int32.Parse(itemIDStr);
 			using PlayerBussiness playerBussiness = new PlayerBussiness();
 			ItemInfo userItemSingle = playerBussiness.GetUserItemSingle(itemID);
 			if (userItemSingle != null)

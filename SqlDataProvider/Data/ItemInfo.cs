@@ -3,6 +3,17 @@ using System.Collections.Generic;
 
 namespace SqlDataProvider.Data
 {
+    public enum eItemPropertyType
+    {
+        HERT = 1,
+        ARMOR = 2,
+        RECOVER_HP = 3,
+        ATTACK = 4,
+        DEFENSE = 5,
+        AGILITY = 6,
+        LUCK = 7,
+    }
+
     public class ItemInfo : DataObject
     {
         private int _agilityCompose;
@@ -77,6 +88,10 @@ namespace SqlDataProvider.Data
 
         private int _strengthenTimes;
 
+        private int _starLevel;
+
+        private int _starTimes;
+
         private ItemTemplateInfo _template;
 
         private int _templateId;
@@ -102,6 +117,7 @@ namespace SqlDataProvider.Data
                 {
                     agility = GoldEquip.Agility;
                 }
+                
                 return _agilityCompose + agility;
             }
         }
@@ -128,6 +144,7 @@ namespace SqlDataProvider.Data
                 {
                     attack = GoldEquip.Attack;
                 }
+                
                 return _attackCompose + attack;
             }
         }
@@ -206,6 +223,7 @@ namespace SqlDataProvider.Data
                 {
                     defence = GoldEquip.Defence;
                 }
+                
                 return _defendCompose + defence;
             }
         }
@@ -513,6 +531,7 @@ namespace SqlDataProvider.Data
                 {
                     luck = GoldEquip.Luck;
                 }
+                
                 return _luckCompose + luck;
             }
         }
@@ -644,6 +663,99 @@ namespace SqlDataProvider.Data
                 _strengthenTimes = value;
                 _isDirty = true;
             }
+        }
+
+        public int getTotalStrengthenLvl()
+        {
+            return (isGold ? (StrengthenLevel + 1) : StrengthenLevel);
+        }
+        
+        public int getAdditionPropertyByStrengthen(eItemPropertyType pType)
+        {
+            int lvl = this.getTotalStrengthenLvl();
+            if (lvl <= 0)
+            {
+                return 0;
+            }
+
+            switch(pType)
+            {
+                case eItemPropertyType.HERT:
+                case eItemPropertyType.ARMOR:
+                case eItemPropertyType.RECOVER_HP:
+                    return (int)ItemTemplateInfo.getHertAddition(Template.Property7, lvl);
+
+            }
+            return 0;
+        }
+
+        public int getAdditionPropertyByGhostData(eItemPropertyType pType, UserEquipGhostInfo equipGhost, SpiritInfo spiritInfo)
+        {
+            if(equipGhost == null || spiritInfo == null)
+            {
+                return 0;
+            }
+
+            switch (pType)
+            {
+                case eItemPropertyType.HERT:
+                case eItemPropertyType.ARMOR:
+                case eItemPropertyType.RECOVER_HP:
+                    int lvl = this.getTotalStrengthenLvl();
+
+                    int baseHert = Template.Property7;
+                    int hertAdd = (int)ItemTemplateInfo.getHertAddition(baseHert, lvl);
+                    double ratio = 0;
+
+                    if (Template.CategoryID == 7)
+                    {
+                        ratio = baseHert / 200 * Math.Pow(equipGhost.Level, 1.2) / 100;
+                    }
+                    else if (Template.CategoryID == 1 || Template.CategoryID == 5)
+                    {
+                        ratio = baseHert / 60 * Math.Pow(equipGhost.Level, 1.2) / 100;
+                    }
+
+                    return (int)(ratio * (Template.Property7 + hertAdd));
+                case eItemPropertyType.ATTACK:
+                    return (int)(Template.Attack * spiritInfo.AttackAdd / 1000);
+                case eItemPropertyType.DEFENSE:
+                    return (int)(Template.Defence * spiritInfo.DefendAdd / 1000);
+                case eItemPropertyType.AGILITY:
+                    return (int)(Template.Agility * spiritInfo.AgilityAdd / 1000);
+                case eItemPropertyType.LUCK:
+                    return (int)(Template.Luck * spiritInfo.LuckAdd / 1000);
+            }
+            return 0;
+        }
+
+        public int getTotalValueOfProperty(eItemPropertyType pType)
+        {
+            int total = getAdditionPropertyByStrengthen(pType);
+            switch(pType)
+            {
+                case eItemPropertyType.HERT:
+                case eItemPropertyType.ARMOR:
+                case eItemPropertyType.RECOVER_HP:
+                    total += Template.Property7;
+                    break;
+                // for basic properties attack, defense, agility, luck the getter has cacluated total value already
+                case eItemPropertyType.ATTACK:
+                    total = Attack;
+                    break;
+                case eItemPropertyType.DEFENSE:
+                    total = Defence;
+                    break;
+                case eItemPropertyType.AGILITY:
+                    total = Agility;
+                    break;
+                case eItemPropertyType.LUCK:
+                    total = Luck;
+                    break;
+            }
+
+            return total;
+                
         }
 
         public ItemTemplateInfo Template => _template;

@@ -49,6 +49,11 @@ namespace Game.Server.GameUtils
 						for (int i = 0; i < array.Length; i++)
 						{
 							ItemInfo itemInfo = array[i];
+							// TODO: refactor this shit
+							// the purpose of this loop is to add an item has the right place and sendmail/remove item has wrong place
+							// - the right place is the item that is in bag (in the bag range not include equip place)
+							//	 if not in bag then the item must be in equip place and at the right position (eg: Weapon must place in weapon cell)
+							// - otherwise wrong place
 							if (this.IsWrongPlace(itemInfo) && itemInfo.Place < 31 && base.BagType == 0)
 							{
 								int num = this.FindFirstEmptySlot(31);

@@ -37,6 +37,12 @@ namespace Game.Server.Packets.Client
                 }
             }
 
+            if (Items.Count != 4)
+            {
+                client.Out.SendMessage(eMessageType.Normal, LanguageMgr.GetTranslation("ItemFusionHandler.ItemNotEnough"));
+                return 0;
+            }
+
             if (Items.Count >= 4 && (Items[0].TemplateID != Items[1].TemplateID || Items[0].TemplateID != Items[2].TemplateID || Items[0].TemplateID != Items[3].TemplateID))
             {
                 client.Out.SendMessage(eMessageType.ERROR, LanguageMgr.GetTranslation("Tồn tại vật phẩm không cùng loại!"));
@@ -68,7 +74,9 @@ namespace Game.Server.Packets.Client
             bool isBind = false;
             //bool IsBind = false;
             bool result = false;
-            ItemTemplateInfo rewardItem = FusionMgr.Fusion(Items, AppendItems, ref isBind, ref result);
+            Dictionary<int, double> previewItemList = new Dictionary<int, double>();
+            ItemTemplateInfo rewardItem = FusionMgr.FusionV2(Items, AppendItems, ref isBind, ref result, previewItemList);
+            //ItemTemplateInfo rewardItem = FusionMgr.Fusion(Items, AppendItems, ref isBind, ref result);
             if (rewardItem != null)
             {
                 if (rewardItem.CategoryID == 7 || rewardItem.CategoryID == 17)
@@ -84,7 +92,7 @@ namespace Game.Server.Packets.Client
             }
             if (opertionType == 0)
             {
-                Dictionary<int, double> previewItemList = FusionMgr.FusionPreview(Items, AppendItems, ref isBind);
+                //Dictionary<int, double> previewItemList = FusionMgr.FusionPreview(Items, AppendItems, ref isBind);
                 if (previewItemList != null)
                 {
                     if (previewItemList.Count != 0)

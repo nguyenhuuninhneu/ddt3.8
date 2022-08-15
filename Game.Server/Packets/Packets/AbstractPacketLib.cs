@@ -1031,7 +1031,7 @@ namespace Game.Base.Packets
             return gSPacketIn;
         }
 
-        public GSPacketIn SendUserEquip(PlayerInfo player, List<ItemInfo> items, List<UserGemStone> UserGemStone)
+        public GSPacketIn SendUserEquip(PlayerInfo player, List<ItemInfo> items, List<UserGemStone> UserGemStone, List<UserEquipGhostInfo> equipGhost)
         {
             GSPacketIn pkg = new GSPacketIn((byte)ePackageType.ITEM_EQUIP, player.ID);
             pkg.WriteInt(player.ID);
@@ -1134,6 +1134,17 @@ namespace Game.Base.Packets
                 pkg.WriteString(UserGemStone[i].FigSpiritIdValue);
                 pkg.WriteInt(UserGemStone[i].EquipPlace);
             }
+
+            // user equip ghost
+            pkg.WriteInt(equipGhost.Count);
+            foreach (var info in equipGhost)
+            {
+                pkg.WriteInt(info.BagType);
+                pkg.WriteInt(info.Place);
+                pkg.WriteInt(info.Level);
+                pkg.WriteInt(info.TotalGhost);
+            }
+
             pkg.Compress();
             SendTCP(pkg);
             return pkg;
@@ -2117,9 +2128,9 @@ namespace Game.Base.Packets
             };
             GSPacketIn gSPacketIn = new GSPacketIn(167, info.ID);
             gSPacketIn.WriteInt(m_gameClient.Player.PlayerCharacter.ID);
-            string[] array2 = array;
-            string[] array3 = array2;
-            foreach (string key in array3)
+            //string[] array2 = array;
+            //string[] array3 = array2;
+            foreach (string key in array)
             {
                 gSPacketIn.WriteInt(0);
                 gSPacketIn.WriteInt(PlayerProp.Current["Texp"][key]);
@@ -2677,6 +2688,22 @@ namespace Game.Base.Packets
             pkg.WriteInt(player.necklaceExp);
             pkg.WriteInt(player.necklaceExpAdd);
             //pkg.WriteInt(0);//this.Self.necklaceArtificeNeedCount = _arg_1.pkg.readInt();
+            SendTCP(pkg);
+            return pkg;
+        }
+
+        public GSPacketIn SendSyncEquipGhost(PlayerInfo player, List<UserEquipGhostInfo> equipGhost)
+        {
+            GSPacketIn pkg = new GSPacketIn((short)ePackageType.SYNC_EQUIP_GHOST, player.ID);
+            pkg.WriteInt(equipGhost.Count);
+            foreach(UserEquipGhostInfo info in equipGhost)
+            {
+                pkg.WriteInt(info.BagType);
+                pkg.WriteInt(info.Place);
+                pkg.WriteInt(info.Level);
+                pkg.WriteInt(info.TotalGhost);
+            }
+            
             SendTCP(pkg);
             return pkg;
         }

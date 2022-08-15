@@ -1,5 +1,45 @@
+﻿using System;
+
 namespace SqlDataProvider.Data
 {
+	public enum eCategoryType
+    {
+		HAT = 1, //	Nón
+		GLASSES = 2, //	Mắt kính
+		HAIR = 3, //	Tóc
+		DECORATIONS = 4, //	Đồ trang trí
+		CLOTHE5 = 5, //	Quần áo
+		EYES = 6, //	Mắt
+		MAIN_WEAPON = 7, //	Vũ khí
+		BRACELET = 8, //	Vòng tay
+		RING = 9, //	Nhẫn
+		PROPS1 = 10, //	Đạo cụ
+		PROPS2 = 11, //	Đạo cụ
+		QUEST_PROPS = 12, //	Đạo cụ nhiệm vụ
+		SET = 13, //	Set
+		NECKLACE = 14, //	Dây chuyền
+		WING = 15, //	Cánh
+		BALLOON = 16, //	Bong bóng
+		SECONDARY_WEAPON = 17, //	Vũ khí phụ
+		CARD_BOX = 18, //	Hộp thẻ
+		SUPPORT = 19, //	Hỗ trợ
+		XIULIAN = 20, //	Nước tu luyện
+		QUEST_BOOK = 23, //	Sách nhiệm vụ
+		GIFT = 25, //	Quà tặng
+		SPECIAL_WEAPON = 27, //	Vũ khí đặc biệt
+		// 30	Propriedade especial
+		// 31	Mão Secundária Especial
+		// 32	Sementes
+		// 33	Fertilizante
+		// 34	alimento
+		// 35	ovo de bicho de estimação
+		// 36	Colheita
+		BADGE = 40, //	Huy hiệu
+		// 50	Arma Mascote
+		// 51	Chapéu Mascote
+		// 52	Arma Mascote
+	}
+
     public class ItemTemplateInfo : DataObject
     {
         public string AddTime { get; set; }
@@ -128,8 +168,17 @@ namespace SqlDataProvider.Data
 				return false;
 			}
         }
+		public bool IsMainWeapon()
+		{
+			return CategoryID == (int)eCategoryType.MAIN_WEAPON;
+		}
 
-        public bool IsRing()
+		public bool IsArm()
+        {
+			return CategoryID == (int)eCategoryType.MAIN_WEAPON || CategoryID == (int)eCategoryType.SECONDARY_WEAPON;
+		}
+
+		public bool IsRing()
         {
 			switch (TemplateID)
 			{
@@ -175,5 +224,10 @@ namespace SqlDataProvider.Data
 				return false;
 			}
         }
-    }
+
+		public static double getHertAddition(double baseValue, double coefficient)
+		{
+			return Math.Round(baseValue * (Math.Pow(1.1, coefficient) - 1));
+		}
+	}
 }
