@@ -758,6 +758,5 @@
 
         <script type="text/javascript">
             loading_ItemIcon(1, 1, true);
-
         </script>
     </asp:Content>

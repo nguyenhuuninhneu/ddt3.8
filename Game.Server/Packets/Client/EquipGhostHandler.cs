@@ -11,7 +11,7 @@ namespace Game.Server.Packets.Client
     [PacketHandler((short)ePackageType.EQUIP_GHOST, "Equip Ghost Item")]
     public class EquipGhostHandler : IPacketHandler
     {
-        public static Random random = new Random();
+        private static RandomSafe random = new RandomSafe();
 
         public int HandlePacket(GameClient client, GSPacketIn packet)
         {
@@ -50,21 +50,21 @@ namespace Game.Server.Packets.Client
             }
 
             double probability = 0.0;
-            double rate = 1.0;
+            double rate = 100.0;
 
             // calculate equip ghost probability
             if(luck != null)
             {
-                rate += luck.Template.Property2 / 100;
+                rate += (double)luck.Template.Property2;
             }
             // TODO: update this formula using GhostTime and some information in SpiritInfo
-            probability = 5.0 * rate * Math.Pow(2, Math.Pow(2, stone.Template.Level - 1) + 2 - oldLv);
+            probability = Math.Floor(5.0 * rate * Math.Pow(2, Math.Pow(2, stone.Template.Level - 1) + 2 - oldLv));
 
             int removeCount = 1;
             bool isSuccess = false;
-            int rand = random.Next(100);
+            int rand = random.Next(10000);
 
-            if (probability > rand)
+            if (probability > (double)rand)
             {
                 isSuccess = true;
                 equipGhost.TotalGhost = 0;

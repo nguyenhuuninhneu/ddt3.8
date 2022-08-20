@@ -642,6 +642,7 @@ namespace Game.Logic
         public SimpleBoss CreateBoss(int npcId, int x, int y, int direction, int type, string action, LivingConfig config)
         {
             NpcInfo npcInfoById = NPCInfoMgr.GetNpcInfoById(npcId);
+            npcInfoById.BaseDamage = 1;
             SimpleBoss simpleBoss = new SimpleBoss(PhysicalId++, this, npcInfoById, direction, type, action);
             if (config != null)
             {

@@ -322,6 +322,10 @@ namespace Game.Base.Packets
                     {
                         AsyncTcpSendCallback(this, send_event);
                     }
+                    if (log.IsDebugEnabled)
+                    {
+                        log.Debug("Send to client Package code: " + packet.Code);
+                    }
                 }
                 catch (Exception exception)
                 {
